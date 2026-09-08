@@ -774,32 +774,6 @@
       ]
     }
   ],
-  "papers": [
-    {
-      "id": "paper-1",
-      "title": "A Lightweight Multi-modal CLIP Framework with Generative Augmentation for Semiconductor Wafermap Defect Classification",
-      "type": "Conference",
-      "authors": "황지호 (제1저자), 지도교수",
-      "venue": "한국정보과학회 / IEEE AI-HW Joint Workshop",
-      "year": "2025",
-      "abstract": "반도체 수율 관리의 핵심인 Wafermap 결함 분류에 있어서 불균형 데이터셋 및 레이블이 없는 새로운 패턴 인식의 한계를 극복하기 위해, 경량 Diffusion 모델 기반 결함 합성과 CLIP 멀티모달 텍스트-이미지 프롬프트 튜닝을 통합한 에지 최적화 분류 체계를 제안한다. 실험 결과 WM-811K 데이터셋에서 96.4%의 분류 정확도와 23.3ms의 추론 속도를 보였다.",
-      "pdfUrl": "#",
-      "bibtex": "@inproceedings{hwang2025wafermap,\n  title={A Lightweight Multi-modal CLIP Framework with Generative Augmentation for Semiconductor Wafermap Defect Classification},\n  author={Hwang, Ji-Ho and Prof. Advisor},\n  booktitle={IEEE AI-HW Joint Workshop},\n  year={2025}\n}",
-      "awards": "우수 논문 발표 후보 (Best Paper Nominee)"
-    },
-    {
-      "id": "paper-2",
-      "title": "FPGA-Based Real-Time Signal Synthesizer & Embedded Logic Analyzer Co-Design",
-      "type": "Poster",
-      "authors": "황지호, 연구팀",
-      "venue": "대한전자공학회 학술대회",
-      "year": "2024",
-      "abstract": "Artix-7 FPGA를 이용한 고속 디지털 신호 합성기 IP와 AXI 버스 인터페이스 설계 및 디버깅을 위한 내장형 로직 애널라이저 구현 기법을 소개한다.",
-      "pdfUrl": "#",
-      "bibtex": "@article{hwang2024fpga,\n  title={FPGA-Based Real-Time Signal Synthesizer Design},\n  author={Hwang, Ji-Ho},\n  journal={KIEES Annual Conference},\n  year={2024}\n}",
-      "awards": "학부생 연구 경진대회 우수상"
-    }
-  ],
   "blogs": [
     {
       "id": "blog-wafermap-clip",
@@ -863,16 +837,6 @@
       "content": "### 4-Layer PCB 스택업 전략\n\n2층 PCB 대비 4층 PCB의 가장 큰 장점은 **전용 Ground Plane과 Power Plane**을 가질 수 있어 신호 귀환 경로(Return Path)의 임피던스를 획기적으로 낮출 수 있다는 점입니다.\n\n#### 권장 스택업 (1.6mm FR4)\n1. **Top Layer**: Signal Lines + Critical Analog Components\n2. **Layer 2**: Continuous Solid GND Plane (가장 중요)\n3. **Layer 3**: 3.3V / 5V Power Plane (Split Plane for Analog 3.3V)\n4. **Bottom Layer**: Secondary Signal + Bulk Capacitors\n\n---\n\n### Decoupling Capacitor 배치의 철칙\n\nMCU 각 VDD 핀 근처에 100nF MLCC 수식 배치가 필수입니다. 이때 Via 위치가 전원 트레이스보다 먼 쪽에 배치되면 Loop Inductance가 증가하므로:\n**VDD Pin -> 100nF Cap Pad -> Via to Power Plane** 순서로 기하학적 최소 거리를 유지해야 합니다."
     }
   ],
-  "messages": [
-    {
-      "id": "msg-1",
-      "name": "채용담당자 (삼성전자 DS)",
-      "email": "recruiter@samsung.com",
-      "organization": "Samsung Electronics DS Semiconductor",
-      "message": "황지호님의 Wafermap Generative AI & CLIP 포트폴리오를 매우 인상 깊게 보았습니다. 하드웨어 회로 지식과 AI 모델 경량화 역량을 갖춘 수율 엔지니어링 직무 면접 제안을 드리고 싶습니다.",
-      "date": "2026-08-01 14:20",
-      "read": false
-    }
-  ],
-  "updatedAt": "2026-09-08T13:19:44.411Z"
+  "exportedAt": "2026-09-08T13:38:03.873Z",
+  "version": "1.0"
 }

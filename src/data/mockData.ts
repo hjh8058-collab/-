@@ -779,32 +779,7 @@ export const initialGallery: GalleryItem[] = [
   }
 ];
 
-export const initialPapers: PaperItem[] = [
-  {
-    "id": "paper-1",
-    "title": "A Lightweight Multi-modal CLIP Framework with Generative Augmentation for Semiconductor Wafermap Defect Classification",
-    "type": "Conference",
-    "authors": "황지호 (제1저자), 지도교수",
-    "venue": "한국정보과학회 / IEEE AI-HW Joint Workshop",
-    "year": "2025",
-    "abstract": "반도체 수율 관리의 핵심인 Wafermap 결함 분류에 있어서 불균형 데이터셋 및 레이블이 없는 새로운 패턴 인식의 한계를 극복하기 위해, 경량 Diffusion 모델 기반 결함 합성과 CLIP 멀티모달 텍스트-이미지 프롬프트 튜닝을 통합한 에지 최적화 분류 체계를 제안한다. 실험 결과 WM-811K 데이터셋에서 96.4%의 분류 정확도와 23.3ms의 추론 속도를 보였다.",
-    "pdfUrl": "#",
-    "bibtex": "@inproceedings{hwang2025wafermap,\n  title={A Lightweight Multi-modal CLIP Framework with Generative Augmentation for Semiconductor Wafermap Defect Classification},\n  author={Hwang, Ji-Ho and Prof. Advisor},\n  booktitle={IEEE AI-HW Joint Workshop},\n  year={2025}\n}",
-    "awards": "우수 논문 발표 후보 (Best Paper Nominee)"
-  },
-  {
-    "id": "paper-2",
-    "title": "FPGA-Based Real-Time Signal Synthesizer & Embedded Logic Analyzer Co-Design",
-    "type": "Poster",
-    "authors": "황지호, 연구팀",
-    "venue": "대한전자공학회 학술대회",
-    "year": "2024",
-    "abstract": "Artix-7 FPGA를 이용한 고속 디지털 신호 합성기 IP와 AXI 버스 인터페이스 설계 및 디버깅을 위한 내장형 로직 애널라이저 구현 기법을 소개한다.",
-    "pdfUrl": "#",
-    "bibtex": "@article{hwang2024fpga,\n  title={FPGA-Based Real-Time Signal Synthesizer Design},\n  author={Hwang, Ji-Ho},\n  journal={KIEES Annual Conference},\n  year={2024}\n}",
-    "awards": "학부생 연구 경진대회 우수상"
-  }
-];
+export const initialPapers: PaperItem[] = [];
 
 export const initialBlogPosts: BlogPost[] = [
   {

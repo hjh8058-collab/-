@@ -369,8 +369,78 @@
       "pdfReportUrl": "",
       "videoUrl": "#",
       "sections": {
+        "section-1788871952303": {
+          "title": "ML 기반 제조 설비 Predictive Maintenance 및 희소 고장 유형 분석",
+          "content": "### 1. 문제 정의\n제조 설비의 센서 데이터를 기반으로 고장 위험을 사전에 예측하는 최적의 Predictive Maintenance 모델 구축\n[blue]실제 고장을 최대한 놓치지 않으면서(False Negative 최소화), 불필요한 유지보수 경고도 과도하게 발생하지 않도록 Precision–Recall 균형을 맞추는 것[/blue]\n\n### 2. 데이터 분석\n**Dataset**\nAI4I020 제조 설비의 온도·RPM·토크·공구 마모 등의 상태 데이터를 이용해서 기계 고장을 사전에 예측하는 Predictive Maintenance용 합성 제조 데이터셋\n[image:0]\n\n< 데이터의 비고장/고장 비율 >\n**Class Imbalance**\n고장 데이터가 소수 클래스임을 확인하고, 단순 정확도보다 실제 고장을 탐지하는 Recall 중심의 평가 전략을 수립했다.\n**Failure Pattern Analysis**\n정상/고장 그룹을 비교한 결과, 고장 설비에서 토크와 공구 마모가 증가하고 회전속도가 감소하는 경향을 확인했다.\n[image:1]\n\n< Torque의 Box Plot>\n고장 설비의 토크 중앙값과 사분위 범위가 정상 설비보다 전반적으로 높은 수준을 보였다. 다만 고장 그룹에서는 매우 낮은 토크 값도 다수 관찰되어, 고장은 단순한 고토크 조건뿐 아니라 비정상적인 부하 상태 전반과 연관될 가능성이 있음을 확인했다.\n**Statistical Validation**\nWelch’s t-test와 Mann–Whitney U 검정을 통해 정상/고장 그룹 간 주요 센서 변수의 차이를 검증하고, 비정규·비대칭 분포를 고려해 통계적 해석을 보완했다.\n**Feature Engineering**\n원본 센서 데이터뿐 아니라 공정 특성을 반영한 Temperature Difference와 Mechanical Power를 파생 변수로 생성하여 고장 패턴을 추가로 분석했다.\n### 3. 모델 선정 및 Optimization\n**모델 성능 비교**\n[image:2]\n\n선형 모델부터 배깅/부스팅 기반 앙상블 모델까지 6개 알고리즘을 비교하고, 불균형 데이터 특성을 고려해 Recall과 F1 중심으로 최종 모델을 lightGBM으로 선정했다.\n** Grid search기반 Hyperparameter Optimization**\n-\tLightGBM의 주요 트리 구조 및 학습 파라미터를 대상으로 5-fold Grid Search를 수행하고, Precision/Recall/F1을 동시에 비교하여 최적 후보군을 탐색\n-\t제조 설비 고장 미탐 비용을 고려해 CV Recall 0.82 이상을 최소 조건으로 설정하고, 해당 조건을 만족하는 후보 중 F1이 가장 높은 Hyperparameter 조합을 최종 선택\n[image:3]\n\n< Precision-Recall trade-off 그래프 >\n**Threshold Optimization**\n선택된 Hyperparameter로 모델을 다시 학습한 뒤 Validation set에서 0.05 ~ 0.95 threshold를 탐색하고 Precision / Recall / F1 trade-off를 조정.\n**모델 테스트 결과**\n[image:4]\n\n< Confusion Matrix >\n최종 모델은 독립 Test set에서 **51건의 실제 고장 중 44건을 탐지하여 Recall 86.3%**를 달성했다. 동시에 정상 1,449건 중 오경보는 10건으로 제한하여, 높은 고장 탐지율과 낮은 False Positive 사이의 균형을 확보했다.\n### 4. SHAP 분석\n**고장 요인 분석 – SHAP Summary Plot**\n[image:5]\n\n< Summary Plot >\nSHAP 분석을 통해 모델의 주요 고장 판단 요인을 분석했다. Tool Wear가 가장 높은 영향도를 보였으며, 높은 공구 마모와 낮은 회전속도가 고장 확률 증가에 크게 기여하는 패턴을 확인했다. 또한 Mechanical Power와 Torque 역시 특정 운전 조건에서 높은 영향을 보였다.\n**False Nagative 사례 분석 – SHAP Force plot**\n[image:6]\n\n< Force Plot >\nSHAP Force Plot을 활용해 개별 설비 예측의 근거를 분석했다. 특정 사례에서 높은 Tool Wear와 Rotational Speed 등은 고장 예측을 증가시키는 방향으로 작용한 반면, 일부 공정 변수는 위험도를 낮추는 방향으로 기여하여 최종 예측이 형성되는 과정을 확인했다.\n[image:7]\n\n< FN 사례의 고장 유형 파악 >\nFalse Negative 6건을 분석한 결과, 대부분의 미탐 사례가 Tool Wear Failure(TWF)에 해당함을 확인했다.\n-> 이는 고장 라벨을 학습한 모델이 Torque,Rotational Speed,Mechanical Power 기반의 주요 고장 패턴은 잘 탐지했지만, Tool wear 중심의 TWF 패턴에는 상대적으로 취약함을 보여준다.\n\n### 5. 개선 시도 및 결론\nTWF유형에서 상대적으로 높은 미탐 발생-> 따라서 TWF 탐지 성능 개선을 위한 추가 실험을 진행\n** 방법1 – TWF 전용 보조 모델 사용**\n-\tFalse Negative가 TWF에 집중되는 문제를 개선하기 위해 TWF 전용 LightGBM 보조 모델을 추가하고 메인 모델과 OR 방식으로 결합하는 구조를 실험했다. \n-\tTWF 데이터 희소성으로 보조 모델 Recall이 0.20에 그쳐 해당 접근을 폐기하고 추가 feature engineering 방향으로 전환했다.\n**방법 2 – Tool wear 변수 관련 Feature Engineering **\n-\tTWF 미탐 개선을 위해 Tool Wear와 Torque, Mechanical Power, Rotational Speed 간의 interaction feature를 추가하고 LightGBM을 재튜닝했다. \n-\tTWF Recall이 기존 0.25에서 개선되지 않았다\n**실패 사례 분석**\n전체 data 10,000개 중 TWF가 46개에 불과한 극심한 class imbalance가 핵심 원인임을 확인했다.\n\n## 6. 결론\n- 제조 설비 데이터의 정상/고장 분포를 분석하고 통계 검정을 수행한 뒤, LightGBM 기반 예지보전 모델을 구축\n- Grid Search와 validation 기반 threshold 조정을 통해 Recall을 우선적으로 확보했고, test set에서 실제 고장 51건 중 44건을 탐지\n- SHAP과 False Negative 분석을 통해 미탐 6건이 모두 희소 TWF 유형에 집중되어 있음을 확인했으며, 전체 성능뿐 아니라 고장 유형별 모델 한계까지 분석\n\n",
+          "imageUrl": "",
+          "date": "2026.08",
+          "githubUrl": "https://github.com/jiho-hwang-tec/manufacturing-predictive-maintenance",
+          "tags": [
+            "SHAP",
+            "Manufacturing Predictive Maintenanc"
+          ],
+          "summary": "제조 설비 고장 탐지 문제를 데이터로 진단하고 모델 최적화 및 실패 패턴의 원인과 개선 우선순위까지 도출한 프로젝트",
+          "images": [
+            {
+              "id": "0.20138109385602232",
+              "url": "https://cdn.phototourl.com/member/2026-09-07-8c4c8ec8-8e93-45df-a779-bdf4f4be3a75.png",
+              "imageSize": "sm",
+              "imageAlign": "left",
+              "imagePosition": "bottom"
+            },
+            {
+              "id": "0.7662104240539922",
+              "url": "https://cdn.phototourl.com/member/2026-09-07-826ecb93-05ce-44e7-9cf8-98271a281ec6.png",
+              "imageSize": "md",
+              "imageAlign": "left",
+              "imagePosition": "bottom"
+            },
+            {
+              "id": "0.5103691769460669",
+              "url": "https://cdn.phototourl.com/member/2026-09-07-de137a8b-c54e-4521-a0ce-f5ac2a8a2491.png",
+              "imageSize": "md",
+              "imageAlign": "left",
+              "imagePosition": "bottom"
+            },
+            {
+              "id": "0.8908113311855129",
+              "url": "https://cdn.phototourl.com/member/2026-09-07-e5302166-e16c-43e0-ae88-17803777cd40.png",
+              "imageSize": "md",
+              "imageAlign": "left",
+              "imagePosition": "bottom"
+            },
+            {
+              "id": "0.4511229582596299",
+              "url": "https://cdn.phototourl.com/member/2026-09-07-69e6c3de-2934-46e3-be58-9c0d90a6b742.png",
+              "imageSize": "md",
+              "imageAlign": "left",
+              "imagePosition": "bottom"
+            },
+            {
+              "id": "0.11824840637720657",
+              "url": "https://cdn.phototourl.com/member/2026-09-07-30179531-85ed-4535-9e38-e1eeec5df977.png",
+              "imageSize": "md",
+              "imageAlign": "left",
+              "imagePosition": "bottom"
+            },
+            {
+              "id": "0.5111497696568001",
+              "url": "https://cdn.phototourl.com/member/2026-09-07-dea1c98b-6819-4903-a94f-2a55d95ce49e.png",
+              "imageSize": "md",
+              "imageAlign": "left",
+              "imagePosition": "bottom"
+            },
+            {
+              "id": "0.8417645097283258",
+              "url": "https://cdn.phototourl.com/member/2026-09-07-59aad61f-c259-47be-a0ef-85a9483585af.png",
+              "imageSize": "sm",
+              "imageAlign": "left",
+              "imagePosition": "bottom"
+            }
+          ]
+        },
         "architecture": {
-          "title": "Project 1. CIFAR-10 classification Improvement",
+          "title": "CIFAR-10 classification Improvement",
           "content": " <span class=\"text-sm font-bold text-slate-900\">**Dataset** </span>  \n **CIFAR-10** \n- 32*32 RGB Imgaes\n- 10 classes\n- Train / Test split 기반 image classification\n[image:0]\n** 개발 환경 **\nGoogle Colab 기반 Python 개발 환경에서 PyTorch 모델 구현 및 학습\nColab GPU를 활용한 모델 학습 및 실험 수행\n <span class=\"text-sm font-bold text-slate-900\">**Baseline** </span>  \n- Initial Test Accuracy: 73%\n <span class=\"text-sm font-bold text-slate-900\">**Performance Improvement** </span>  \n73% → 86% → 90% → 92.06%\n <span class=\"text-sm font-bold text-slate-900\">**Key Contributions** </span>  \n- Data augmentation과 network architecture 개선을 통해 test accuracy를 73%에서 92.06%까지 향상\n- Train/Test accuracy 비교를 통해 overfitting을 식별하고 regularization 전략 적용\n- Dropout probability와 epoch 수를 실험적으로 조정하여 최적 training configuration 탐색\n- StepLR과 Cosine Annealing을 비교하고 더 빠른 convergence를 보인 Cosine Annealing 선택\n- TensorBoard를 활용하여 training loss, training accuracy, test accuracy를 추적하고 모델 성능을 비교\n[image:1]",
           "imageUrl": "",
           "tags": [
@@ -399,7 +469,7 @@
           "githubUrl": "https://github.com/jiho-hwang-tec/CIFAR-10-classification"
         },
         "section-1787123259936": {
-          "title": "Project 2. VDSR development ",
+          "title": "VDSR development ",
           "content": "### 1. 문제 정의 및 가설\n기존 VDSR은 저해상도 이미지를 고해상도로 복원할 때 전체적인 pixel difference를 줄이는 방향으로 학습되지만, 머리카락이나 윤곽선처럼 high-frequency component가 많은 edge 영역이 충분히 sharp하게 복원되지 않는 문제에 주목했다.\n**가설 설정**\n기존 VDSR Loss에 edge difference를 측정하는 High-Frequency Loss를 추가하면, 학습 과정에서 edge 영역을 더 강조하게 되고 Super-Resolution 성능이 향상될 것이다.\n\n### 2. 모델 개선\n기존 VDSR Loss에 High-Frequency Filter를 이용한 Edge Loss를 추가했다.\n[image:0]\nL_edge는 Super-Resolved Image와 Ground Truth Image에 edge filter를 적용한 뒤, 두 edge map의 차이를 계산하도록 구성했다. \n\n### 3. 실험 및 Troubleshooting\n**실험 1 - Laplacian Filter**\n먼저 기본적인 edge detection 방법인 Laplacian Filter를 적용\n-> visual quality 개선X, PSNR에서도 유의미한 향상X\n-> 단순히 Edge Loss를 추가하는 것보다 어떤 edge detector를 사용하는지가 중요하다고 판단하며 여러 Edge Loss를 추가해보며 실험해야겠다는 판단\n\n**실험 2 - Scharr Filter**\n두 번째로 x/y 방향 gradient를 이용하는 Scharr Filter를 적용\n-> Laplacian과 edge map을 직접 비교한 결과 Scharr Filter가 edge를 더 명확하게 detect하는 것을 확인했고, 기존 VDSR Loss와 Edge Loss의 scale을 고려해 최적의 weight λ 를 설정한 뒤 다시 학습했다.\n [blue]Laplacian 기반 실험에서 성능 향상이 제한적인 원인을 edge detection 성능으로 분석하고, Scharr Filter와 loss weight 조정을 통해 모델을 개선[/blue] \n\n### 4. 결과\nScharr 기반 High-Frequency Loss를 적용한 모델은 기존 VDSR보다 Ground Truth와의 difference 감소,  머리카락과 같은 edge 영역이 더 sharp하게 복원, PSNR 소폭 향상\n[image:1]\n\n[image:2]\n",
           "imageUrl": "",
           "tags": [
@@ -434,7 +504,7 @@
           ]
         },
         "section-1787125226843": {
-          "title": "Project 3. CUT model reproduction",
+          "title": "CUT model reproduction",
           "content": "### 1. 프로젝트 개요\nCityscapes 데이터를 trainA / trainB / testA / testB 형태의 unpaired dataset으로 구성하고, CycleGAN 계열 Generator/Discriminator 구조에 CUT의 PatchNCE Loss와 Feature Sampling Network(netF)를 결합한 Image-to-Image Translation 모델을 직접 구현\n\n### 2. 주요 구현\n** 개발환경**\n- Linux GPU 원격 서버에 SSH로 접속해 모델 개발 및 학습 수행\n- Conda 기반 Python 가상환경 및 CUDA GPU 학습 환경 구성\n- Byobu/Tmux를 활용해 장시간 학습 세션 유지 및 모니터링\n\n**구현**\n- PyTorch 기반 Custom Dataset / DataLoader 구현\n- Command-line 기반 Hyperparameter Configuration\n- ResNet 계열 Generator + Instance Normalization\n- Patch-level Feature Sampling을 위한 netF\n- Positive/Negative Patch Similarity 기반 PatchNCE Loss\n- Train/Test preprocessing pipeline 및 FID 평가 구성\n\n### 3. 트러블슈팅\n** 메모리 부족으로 Process가 Killed되는 문제**\n처음에는 Dataset initialization 시 모든 이미지를 RAM에 미리 로드해 Cityscapes 규모가 커지면서 메모리 부족이 발생했다.\n→ 전체 이미지를 preload하지 않고, getitem__() 호출 시 필요한 이미지만 disk에서 Lazy Loading하도록 Dataset 구조를 수정해 해결\n\n**PatchNCE Loss 학습 불안정**\nNCE Loss에서 NaN이 발생하고 값이 정상적으로 변화하지 않는 문제를 분석했다.\n→ Feature similarity와 tensor dimension을 점검하고 Positive/Negative cosine similarity 기반 NCE 계산을 수정.\n\n**200 Epoch 이후에도 학습이 제대로 진행되지 않는 문제**\n처음에는 Replay Buffer, Discriminator Weight, Network Depth 등을 의심했지만 최종적으로 netF가 optimizer에 포함되지 않아 Feature Sampling Network가 학습되지 않고 있음을 발견\n-> 초기 random feature를 계속 사용하면서 PatchNCE 학습 자체가 제대로 이루어지지 않았던 문제를 찾아냈다.\n\n### 4. 결과 \n**학습된 이미지**\n",
           "imageUrl": "",
           "date": "2024.07",
@@ -704,32 +774,6 @@
       ]
     }
   ],
-  "papers": [
-    {
-      "id": "paper-1",
-      "title": "A Lightweight Multi-modal CLIP Framework with Generative Augmentation for Semiconductor Wafermap Defect Classification",
-      "type": "Conference",
-      "authors": "황지호 (제1저자), 지도교수",
-      "venue": "한국정보과학회 / IEEE AI-HW Joint Workshop",
-      "year": "2025",
-      "abstract": "반도체 수율 관리의 핵심인 Wafermap 결함 분류에 있어서 불균형 데이터셋 및 레이블이 없는 새로운 패턴 인식의 한계를 극복하기 위해, 경량 Diffusion 모델 기반 결함 합성과 CLIP 멀티모달 텍스트-이미지 프롬프트 튜닝을 통합한 에지 최적화 분류 체계를 제안한다. 실험 결과 WM-811K 데이터셋에서 96.4%의 분류 정확도와 23.3ms의 추론 속도를 보였다.",
-      "pdfUrl": "#",
-      "bibtex": "@inproceedings{hwang2025wafermap,\n  title={A Lightweight Multi-modal CLIP Framework with Generative Augmentation for Semiconductor Wafermap Defect Classification},\n  author={Hwang, Ji-Ho and Prof. Advisor},\n  booktitle={IEEE AI-HW Joint Workshop},\n  year={2025}\n}",
-      "awards": "우수 논문 발표 후보 (Best Paper Nominee)"
-    },
-    {
-      "id": "paper-2",
-      "title": "FPGA-Based Real-Time Signal Synthesizer & Embedded Logic Analyzer Co-Design",
-      "type": "Poster",
-      "authors": "황지호, 연구팀",
-      "venue": "대한전자공학회 학술대회",
-      "year": "2024",
-      "abstract": "Artix-7 FPGA를 이용한 고속 디지털 신호 합성기 IP와 AXI 버스 인터페이스 설계 및 디버깅을 위한 내장형 로직 애널라이저 구현 기법을 소개한다.",
-      "pdfUrl": "#",
-      "bibtex": "@article{hwang2024fpga,\n  title={FPGA-Based Real-Time Signal Synthesizer Design},\n  author={Hwang, Ji-Ho},\n  journal={KIEES Annual Conference},\n  year={2024}\n}",
-      "awards": "학부생 연구 경진대회 우수상"
-    }
-  ],
   "blogs": [
     {
       "id": "blog-wafermap-clip",
@@ -793,16 +837,6 @@
       "content": "### 4-Layer PCB 스택업 전략\n\n2층 PCB 대비 4층 PCB의 가장 큰 장점은 **전용 Ground Plane과 Power Plane**을 가질 수 있어 신호 귀환 경로(Return Path)의 임피던스를 획기적으로 낮출 수 있다는 점입니다.\n\n#### 권장 스택업 (1.6mm FR4)\n1. **Top Layer**: Signal Lines + Critical Analog Components\n2. **Layer 2**: Continuous Solid GND Plane (가장 중요)\n3. **Layer 3**: 3.3V / 5V Power Plane (Split Plane for Analog 3.3V)\n4. **Bottom Layer**: Secondary Signal + Bulk Capacitors\n\n---\n\n### Decoupling Capacitor 배치의 철칙\n\nMCU 각 VDD 핀 근처에 100nF MLCC 수식 배치가 필수입니다. 이때 Via 위치가 전원 트레이스보다 먼 쪽에 배치되면 Loop Inductance가 증가하므로:\n**VDD Pin -> 100nF Cap Pad -> Via to Power Plane** 순서로 기하학적 최소 거리를 유지해야 합니다."
     }
   ],
-  "messages": [
-    {
-      "id": "msg-1",
-      "name": "채용담당자 (삼성전자 DS)",
-      "email": "recruiter@samsung.com",
-      "organization": "Samsung Electronics DS Semiconductor",
-      "message": "황지호님의 Wafermap Generative AI & CLIP 포트폴리오를 매우 인상 깊게 보았습니다. 하드웨어 회로 지식과 AI 모델 경량화 역량을 갖춘 수율 엔지니어링 직무 면접 제안을 드리고 싶습니다.",
-      "date": "2026-08-01 14:20",
-      "read": false
-    }
-  ],
-  "updatedAt": "2026-08-31T15:54:48.693Z"
+  "exportedAt": "2026-09-08T13:38:03.873Z",
+  "version": "1.0"
 }
