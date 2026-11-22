@@ -1,4 +1,4 @@
-import { UserProfile, Project, ResearchItem, GalleryItem, PaperItem, BlogPost } from "../types";
+import { UserProfile, Project, ResearchItem, GalleryItem, PaperItem, BlogPost } from '../types';
 
 export const initialProfile: UserProfile = {
   "name": "황지호",
@@ -20,10 +20,10 @@ export const initialProfile: UserProfile = {
   "photoAlign": "center",
   "homeCatchphrase": "AI를 중심으로 탄탄한 공학적 기반 위에서\nEmbedded System까지 유연하게 확장하며 문제를 해결하는 신입 엔지니어입니다.",
   "homeBadges": [
+    "Embedded",
+    "MCU",
     "AI",
-    "ML",
-    "ComputerVision",
-    "Embedded"
+    "ML"
   ],
   "homeCtaText": "이력서 (PDF) 다운로드",
   "homeSummaryTitle": "[신입 포부] 빠른 학습 능력과 강한 정직함으로 기여하겠습니다.",
@@ -89,6 +89,128 @@ export const initialProfile: UserProfile = {
 };
 
 export const initialProjects: Project[] = [
+  {
+    "id": "proj-1787043638777",
+    "title": "MCU & Hardware Systems",
+    "subtitle": "학부 전공 / 프로젝트 설명",
+    "category": "etc.",
+    "tags": [
+      "CAD",
+      "verilog",
+      "Circuit Design",
+      "PCB design"
+    ],
+    "featured": false,
+    "date": "",
+    "thumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+    "sections": {
+      "overview": {
+        "title": "PPG 센서 기반 웨어러블 기기 제작",
+        "content": "### 1. 프로젝트 개요\nLED와 Photodiode를 이용한 Reflection-mode PPG 센서를 설계하고, Transimpedance Amplifier와 2단 증폭·필터 회로를 구성해 미세한 혈류 신호를 측정\n\n### 2. 설계 및 구현\n- HPF/LPF 기반 노이즈 제거 회로 설계\n- 전체 증폭도 2,652배 → 3,351배로 개선\n- PCB 설계·제작 및 측정용 Output Pin 추가\n- 피부 접촉을 고려한 3D Printed Case 설계\n[image:0]\n\n### 3. 트러블슈팅\n초기에는 회로 자체는 동작했지만 손가락에서 생체신호보다 노이즈가 크게 측정되는 문제\n\n**해결 방법**\n- LED 저항 1kΩ → 330Ω → 광량 증가\n- Transimpedance 저항 10kΩ → 75kΩ → 신호 크기 증가\n- Cut-off Frequency 재조정 → 노이즈 감소\n- LED–Photodiode 간격 3.5mm → 1mm → 반사광 수신 개선을 적용했고, 이후 실제 심박 신호 측정에 성공\n\n### 4. 결과\n최종 PCB에서 손끝 PPG 신호 측정에 성공했고, 손목에서도 특정 위치에서 측정 가능함을 확인\n[image:1]\n[image:2]\n",
+        "imageUrl": "",
+        "tags": [
+          "CAD",
+          "Embedded System",
+          "PCB design",
+          "Hardware Prototyping"
+        ],
+        "summary": "광학식 PPG 원리를 기반으로 심박 생체신호를 측정하는 센서를 회로 설계부터 PCB·3D 케이스 제작까지 구현하고, 노이즈와 광학 배치 문제를 반복적으로 개선해 실제 손끝·손목 신호 측정까지 검증한 프로젝트",
+        "images": [
+          {
+            "id": "0.4189637641671188",
+            "url": "https://i.ibb.co/SDqH85rr/2026-08-31-10-44-42.png",
+            "imageSize": "sm",
+            "imageAlign": "left",
+            "imagePosition": "bottom"
+          },
+          {
+            "id": "0.9506710135536534",
+            "url": "https://i.ibb.co/zWxbD258/2026-08-31-6-45-13.png",
+            "imageSize": "md",
+            "imageAlign": "left",
+            "imagePosition": "bottom"
+          },
+          {
+            "id": "0.8194143662835289",
+            "url": "https://i.ibb.co/6c8c5L2N/2026-08-31-6-45-26.png",
+            "imageSize": "md",
+            "imageAlign": "left",
+            "imagePosition": "bottom"
+          }
+        ]
+      },
+      "section-1795326168280": {
+        "title": "저전력·고이득 CE 증폭기 설계 및 최적화",
+        "content": "### 1. 프로젝트 개요\n주어진 오디오 시스템에서 높은 전압 이득(Gain)과 낮은 소비전류(Ic)를 동시에 달성하는 CE(Common Emitter) 증폭기 설계를 목표로 수행한 프로젝트.\n\n** 설계 요구사항 **\n- Microphone 입력: DC 0.2V, AC 50mVpp (1kHz)\n- Microphone 출력 임피던스: 100Ω\n- Filter 입력 임피던스: 4.7kΩ\n- Filter 입력 DC Level: 0.8V\n- Gain 최대화 및 Ic 최소화\n\n### 2. 설계 및 구현\n- BJT 기반 CE 증폭기 설계 및 PSpice 시뮬레이션\n- DC Biasing과 Capacitive Coupling을 적용해 DC 동작점 및 AC 신호 전달 조건 설계\n- Coupling Capacitor(C1, C2)와 Emitter Bypass Capacitor(C3)를 활용해 신호 전달 및 Gain 개선\n- Emitter Degeneration과 Self Biasing 회로를 각각 설계하고 성능 비교\n- PSpice DC Sweep으로 출력 DC Level 0.8V를 만족하는 저항값 탐색\n- 브레드보드에 회로를 구현하고 가변저항으로 소자값 조정\n- 오실로스코프 및 멀티미터로 Gain, Ic, 출력 DC Level 측정\n최종적으로 시뮬레이션과 실측을 반복해 Gain과 소비전류의 Trade-off를 최적화한 CE 증폭기 구현.\n\n### 3. 트러블슈팅\n\n**문제 1.  Emitter Degeneration 회로의 성능 최적화 한계**\n초기 회로에서 DC Level 0.8V는 충족했으나, 제한된 소자 조건에서 Gain을 높이면서 Ic를 낮추는 데 한계 발생.\n\n [blue]해결방법[/blue] \n- PSpice와 가변저항을 활용해 저항값별 Gain 및 Ic 변화 분석\n- 초기 회로에서 Gain 92.8, Ic 2.16mA 달성\n- 추가적인 성능 개선을 위해 Self Biasing 회로로 설계 변경\n\n**문제 2. Gain과 소비전류 간 Trade-off 및 출력 왜곡**\nSelf Biasing 회로에서 R3 증가 시 Ic와 Gain이 함께 감소하고, R3 감소 시 Ic 증가 및 출력 왜곡 발생.\n\n [blue]해결 방법[/blue] \n- PSpice에서 R2, R3 저항값을 변경하며 Gain과 Ic 비교\n- BJT의 Active Region 유지와 출력 왜곡을 고려해 최적 저항값 선정\n- 브레드보드에서 5kΩ 가변저항으로 미세 조정하고 실측 검증\n\n### 4. 결과\n**회로별 성능 비교**\n[image:0]\n\n**핵심 성과**\n- Emitter Degeneration의 성능 한계를 분석하고 Self Biasing 회로로 재설계하여 Gain 약 12.1% 향상 및 Ic 약 12.0% 감소 달성. \n- PSpice 시뮬레이션과 실제 회로 측정을 통해 설계 조건을 검증하고, 전압 이득과 소비전류 간 Trade-off를 최적화한 아날로그 회로 설계 경험.",
+        "imageUrl": "",
+        "date": "",
+        "tags": [
+          "Pspice",
+          "Analog Circuit Design",
+          "Oscilloscope"
+        ],
+        "images": [
+          {
+            "id": "0.2077631787201385",
+            "url": "https://cdn.phototourl.com/anon/2026-11-22-c324508a-b5a5-4065-9b46-bc9ea6782654.png",
+            "imageSize": "lg",
+            "imageAlign": "left",
+            "imagePosition": "bottom"
+          }
+        ],
+        "summary": " PSpice 시뮬레이션과 실제 회로 검증을 통해 전압 이득(Gain)을 극대화하고 소비전류(Ic)를 최소화한 고이득·저전력 CE 증폭기 설계 및 최적화 프로젝트"
+      },
+      "hardware": {
+        "title": "Arduino project - 시각 장애인을 위한 전자 점자 영어 학습기기 제작",
+        "content": "### 1. 프로젝트 개요\n기존 점자책이나 점자판은 휴대성과 반복 학습 측면에서 제약이 있어, 촉각 점자 출력 + 음성 안내 + 랜덤 단어 학습을 하나의 기기로 통합하는 것을 목표.\n\n**핵심 기능**\n- 6점 전자 점자 출력\n- 단어 뜻·발음 음성 재생\n- 단어 데이터셋 랜덤 비복원 추출\n- 버튼을 통한 반복/다음 단어 제어\n\n### 2. 설계 및 구현\n- Arduino UNO 기반 제어\n- 6개 Servo Motor + Spring Cylinder로 점자 돌출 구현\n- 회전 운동을 직선 운동으로 바꾸는 Cam 구조 적용\n- SD Card + DFPlayer + Speaker로 음성 출력\n- Fusion 360 기반 3D 케이스 설계 및 출력\n [blue]최종적으로 영어 단어가 선택되면 뜻과 발음이 음성으로 나오고, 알파벳 점자가 한 글자씩 순차적으로 돌출되도록 구현.[/blue] \n\n### 3. 트러블슈팅\n**문제1**\n초기에는 6개의 Linear Solenoid를 사용\n-> 높은 발열, 예상보다 큰 소비전류, 6개 동시 구동 불안정 문제 발생, 실제 측정에서도 사양 3mA보다 높은 약 6mA가 흐르는 것을 확인. \n**해결 방법**\n동작부를 Solenoid에서 Servo Motor로 변경, Servo의 회전 운동을 Cam 구조를 이용해 직선 운동으로 변환. 변경 후 6개 Servo의 동시 동작을 확인했다.\n\n**문제 2**\n추가로 일부 Servo만 동작하는 문제\n**해결 방법**\n회로 점검을 통해 Arduino와 외부 전원의 GND 미공유와 전류 공급 부족을 원인으로파악, GND를 공통 연결하고 전류 한계를 1~1.5A 수준으로 조정해 해결\n[image:1]\n\n### 4. 결과\n랜덤 영어 단어 선택, 뜻·발음 음성 출력, 해당 알파벳 점자의 순차적 돌출, 현재 단어 반복 / 다음 단어 이동 기능을 모두 구현\n**최종 프로토타입 설계도**\n[image:0]\n**최종 프로토타입 및 동작 이미지**\n[image:2]\n**핵심 성과**\n전력·발열 문제로 실패한 초기 Solenoid 설계를 Servo + Cam 구조로 재설계하고, 전원·GND 문제까지 단계적으로 분석해 6점 전자 점자 장치를 완성한 하드웨어 시스템 통합 경험\n",
+        "imageUrl": "",
+        "date": "2023.09 - 2023.12",
+        "tags": [
+          "Embedded Systems",
+          "Hardware Prototyping",
+          "MCU"
+        ],
+        "summary": "시각장애인의 영어 학습을 지원하기 위한 음성 출력과 6-dot를 결합한 Arduino 기반 학습기 프로토타입 제작 프로젝트",
+        "images": [
+          {
+            "id": "0.27616313143830007",
+            "url": "https://i.ibb.co/4g2cXV2r/2026-08-31-6-45-55.png",
+            "imageSize": "lg",
+            "imageAlign": "left",
+            "imagePosition": "bottom"
+          },
+          {
+            "id": "0.5523236864234494",
+            "url": "https://i.ibb.co/Q38HgPDS/2026-08-31-10-53-04.png",
+            "imageSize": "md",
+            "imageAlign": "left",
+            "imagePosition": "bottom"
+          },
+          {
+            "id": "0.029982370803851244",
+            "url": "https://i.ibb.co/tPYdJVRp/2026-08-31-10-57-45.png",
+            "imageSize": "lg",
+            "imageAlign": "left",
+            "imagePosition": "bottom"
+          }
+        ]
+      },
+      "architecture": {
+        "title": "Project 2.  FPGA project",
+        "content": "### 1. 프로젝트 개요\nFPGA 보드에서 동작하는 디지털 시계를 RTL 모듈 기반으로 설계하고, 시뮬레이션 검증 후 실제 하드웨어에서 동작을 확인했다.\n\n### 2. 주요 구현 내용\n**개발환경**\n- Intel Quartus Prime · QuestaSim · Verilog/SystemVerilog\n- FPGA 설계, 합성 및 시뮬레이션 기반 검증\n\n### 3. 주요 구현\n- NCO 기반 Clock Division으로 고주파 FPGA Clock을 1Hz 신호로 변환\n- Counter와 Controller를 이용해 시·분·초, 시간 설정, Alarm, Timer 기능 구현\n- Decoder 및 LED Controller를 이용한 7-Segment Display 출력\n- Slow Clock + D Flip-Flop 기반 Switch Debouncing 구현\n- Testbench와 Waveform Simulation으로 rollover 및 제어 신호 검증 후 FPGA 보드에서 통합 테스트\n### 4. 핵심 성과\nClock Division, Counter, Display Decoder, Controller, Alarm 등을 독립적인 RTL module로 설계하고, Simulation 기반 검증 후 FPGA hardware에 통합한 Digital System Design 경험\n",
+        "imageUrl": "",
+        "summary": "Verilog 기반으로 Clock, Counter, Controller, Alarm, 7-Segment Display 모듈을 설계하고 FPGA에서 동작을 검증한 디지털 시계 프로젝트",
+        "tags": [
+          "FPGA",
+          "Digital Clock"
+        ]
+      }
+    },
+    "githubUrl": "",
+    "pdfReportUrl": "",
+    "pdfDocuments": [],
+    "pdfReportLabel": "PDF 보고서"
+  },
   {
     "id": "proj-wafermap-ai",
     "title": "WaferCLIP",
@@ -179,7 +301,7 @@ export const initialProjects: Project[] = [
         "images": [
           {
             "id": "0.3403963952054716",
-            "url": "https://cdn.phototourl.com/free/2026-08-31-28d6e673-4d39-4d42-a948-2b826beb4b2d.png",
+            "url": "https://cdn.phototourl.com/anon/2026-11-22-f0edaf25-90b3-4734-ae71-3d2001135c3e.png",
             "imageSize": "lg",
             "imageAlign": "left",
             "imagePosition": "bottom"
@@ -193,7 +315,7 @@ export const initialProjects: Project[] = [
         "images": [
           {
             "id": "0.07806092397277886",
-            "url": "https://cdn.phototourl.com/free/2026-08-31-e8d01744-e7ba-4702-8b29-0f43344c2437.png",
+            "url": "https://cdn.phototourl.com/anon/2026-11-22-d7d483c5-ec53-4cce-b17a-abb81e170c9d.png",
             "imageSize": "lg",
             "imageAlign": "left",
             "imagePosition": "bottom"
@@ -207,7 +329,7 @@ export const initialProjects: Project[] = [
           },
           {
             "id": "0.855244224196521",
-            "url": "https://cdn.phototourl.com/free/2026-08-31-fcec9053-48c5-42d7-88ba-bbdb268aab33.png",
+            "url": "https://cdn.phototourl.com/anon/2026-11-22-825d9fd7-1f35-480f-88a2-892ffd8e678b.png",
             "imageSize": "md",
             "imageAlign": "left",
             "imagePosition": "bottom"
@@ -530,104 +652,6 @@ export const initialProjects: Project[] = [
     },
     "pdfDocuments": [],
     "pdfReportLabel": "PDF 보고서"
-  },
-  {
-    "id": "proj-1787043638777",
-    "title": "Other Projects - Embedded & Hardware Systems",
-    "subtitle": "학부 전공 / 프로젝트 설명",
-    "category": "etc.",
-    "tags": [
-      "CAD",
-      "verilog",
-      "Circuit Design",
-      "PCB design"
-    ],
-    "featured": false,
-    "date": "",
-    "thumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
-    "sections": {
-      "overview": {
-        "title": "Project 1. PPG 센서 제작",
-        "content": "### 1. 프로젝트 개요\nLED와 Photodiode를 이용한 Reflection-mode PPG 센서를 설계하고, Transimpedance Amplifier와 2단 증폭·필터 회로를 구성해 미세한 혈류 신호를 측정\n\n### 2. 설계 및 구현\n- HPF/LPF 기반 노이즈 제거 회로 설계\n- 전체 증폭도 2,652배 → 3,351배로 개선\n- PCB 설계·제작 및 측정용 Output Pin 추가\n- 피부 접촉을 고려한 3D Printed Case 설계\n[image:0]\n\n### 3. 트러블슈팅\n초기에는 회로 자체는 동작했지만 손가락에서 생체신호보다 노이즈가 크게 측정되는 문제\n\n**해결 방법**\n- LED 저항 1kΩ → 330Ω → 광량 증가\n- Transimpedance 저항 10kΩ → 75kΩ → 신호 크기 증가\n- Cut-off Frequency 재조정 → 노이즈 감소\n- LED–Photodiode 간격 3.5mm → 1mm → 반사광 수신 개선을 적용했고, 이후 실제 심박 신호 측정에 성공\n\n### 4. 결과\n최종 PCB에서 손끝 PPG 신호 측정에 성공했고, 손목에서도 특정 위치에서 측정 가능함을 확인\n[image:1]\n[image:2]\n",
-        "imageUrl": "",
-        "tags": [
-          "CAD",
-          "Embedded System",
-          "PCB design",
-          "Hardware Prototyping"
-        ],
-        "summary": "광학식 PPG 원리를 기반으로 심박 생체신호를 측정하는 센서를 회로 설계부터 PCB·3D 케이스 제작까지 구현하고, 노이즈와 광학 배치 문제를 반복적으로 개선해 실제 손끝·손목 신호 측정까지 검증한 프로젝트",
-        "images": [
-          {
-            "id": "0.4189637641671188",
-            "url": "https://i.ibb.co/SDqH85rr/2026-08-31-10-44-42.png",
-            "imageSize": "sm",
-            "imageAlign": "left",
-            "imagePosition": "bottom"
-          },
-          {
-            "id": "0.9506710135536534",
-            "url": "https://i.ibb.co/zWxbD258/2026-08-31-6-45-13.png",
-            "imageSize": "md",
-            "imageAlign": "left",
-            "imagePosition": "bottom"
-          },
-          {
-            "id": "0.8194143662835289",
-            "url": "https://i.ibb.co/6c8c5L2N/2026-08-31-6-45-26.png",
-            "imageSize": "md",
-            "imageAlign": "left",
-            "imagePosition": "bottom"
-          }
-        ]
-      },
-      "architecture": {
-        "title": "Project 2.  FPGA project",
-        "content": "### 1. 프로젝트 개요\nFPGA 보드에서 동작하는 디지털 시계를 RTL 모듈 기반으로 설계하고, 시뮬레이션 검증 후 실제 하드웨어에서 동작을 확인했다.\n\n### 2. 주요 구현 내용\n**개발환경**\n- Intel Quartus Prime · QuestaSim · Verilog/SystemVerilog\n- FPGA 설계, 합성 및 시뮬레이션 기반 검증\n\n### 3. 주요 구현\n- NCO 기반 Clock Division으로 고주파 FPGA Clock을 1Hz 신호로 변환\n- Counter와 Controller를 이용해 시·분·초, 시간 설정, Alarm, Timer 기능 구현\n- Decoder 및 LED Controller를 이용한 7-Segment Display 출력\n- Slow Clock + D Flip-Flop 기반 Switch Debouncing 구현\n- Testbench와 Waveform Simulation으로 rollover 및 제어 신호 검증 후 FPGA 보드에서 통합 테스트\n### 4. 핵심 성과\nClock Division, Counter, Display Decoder, Controller, Alarm 등을 독립적인 RTL module로 설계하고, Simulation 기반 검증 후 FPGA hardware에 통합한 Digital System Design 경험\n",
-        "imageUrl": "",
-        "summary": "Verilog 기반으로 Clock, Counter, Controller, Alarm, 7-Segment Display 모듈을 설계하고 FPGA에서 동작을 검증한 디지털 시계 프로젝트",
-        "tags": [
-          "FPGA",
-          "Digital Clock"
-        ]
-      },
-      "hardware": {
-        "title": "Project 3. Arduino project - 시각 장애인을 위한 전자 점자 영어 학습기기 제작",
-        "content": "### 1. 프로젝트 개요\n기존 점자책이나 점자판은 휴대성과 반복 학습 측면에서 제약이 있어, 촉각 점자 출력 + 음성 안내 + 랜덤 단어 학습을 하나의 기기로 통합하는 것을 목표.\n\n**핵심 기능**\n- 6점 전자 점자 출력\n- 단어 뜻·발음 음성 재생\n- 단어 데이터셋 랜덤 비복원 추출\n- 버튼을 통한 반복/다음 단어 제어\n\n### 2. 설계 및 구현\n- Arduino UNO 기반 제어\n- 6개 Servo Motor + Spring Cylinder로 점자 돌출 구현\n- 회전 운동을 직선 운동으로 바꾸는 Cam 구조 적용\n- SD Card + DFPlayer + Speaker로 음성 출력\n- Fusion 360 기반 3D 케이스 설계 및 출력\n [blue]최종적으로 영어 단어가 선택되면 뜻과 발음이 음성으로 나오고, 알파벳 점자가 한 글자씩 순차적으로 돌출되도록 구현.[/blue] \n\n### 3. 트러블슈팅\n**문제1**\n초기에는 6개의 Linear Solenoid를 사용\n-> 높은 발열, 예상보다 큰 소비전류, 6개 동시 구동 불안정 문제 발생, 실제 측정에서도 사양 3mA보다 높은 약 6mA가 흐르는 것을 확인. \n**해결 방법**\n동작부를 Solenoid에서 Servo Motor로 변경, Servo의 회전 운동을 Cam 구조를 이용해 직선 운동으로 변환. 변경 후 6개 Servo의 동시 동작을 확인했다.\n\n**문제 2**\n추가로 일부 Servo만 동작하는 문제\n**해결 방법**\n회로 점검을 통해 Arduino와 외부 전원의 GND 미공유와 전류 공급 부족을 원인으로파악, GND를 공통 연결하고 전류 한계를 1~1.5A 수준으로 조정해 해결\n[image:1]\n\n### 4. 결과\n랜덤 영어 단어 선택, 뜻·발음 음성 출력, 해당 알파벳 점자의 순차적 돌출, 현재 단어 반복 / 다음 단어 이동 기능을 모두 구현\n**최종 프로토타입 설계도**\n[image:0]\n**최종 프로토타입 및 동작 이미지**\n[image:2]\n**핵심 성과**\n전력·발열 문제로 실패한 초기 Solenoid 설계를 Servo + Cam 구조로 재설계하고, 전원·GND 문제까지 단계적으로 분석해 6점 전자 점자 장치를 완성한 하드웨어 시스템 통합 경험\n",
-        "imageUrl": "",
-        "date": "2023.09 - 2023.12",
-        "tags": [
-          "Embedded Systems",
-          "Hardware Prototyping"
-        ],
-        "summary": "시각장애인의 영어 학습을 지원하기 위한 음성 출력과 6-dot를 결합한 Arduino 기반 학습기 프로토타입 제작 프로젝트",
-        "images": [
-          {
-            "id": "0.27616313143830007",
-            "url": "https://i.ibb.co/4g2cXV2r/2026-08-31-6-45-55.png",
-            "imageSize": "lg",
-            "imageAlign": "left",
-            "imagePosition": "bottom"
-          },
-          {
-            "id": "0.5523236864234494",
-            "url": "https://i.ibb.co/Q38HgPDS/2026-08-31-10-53-04.png",
-            "imageSize": "md",
-            "imageAlign": "left",
-            "imagePosition": "bottom"
-          },
-          {
-            "id": "0.029982370803851244",
-            "url": "https://i.ibb.co/tPYdJVRp/2026-08-31-10-57-45.png",
-            "imageSize": "lg",
-            "imageAlign": "left",
-            "imagePosition": "bottom"
-          }
-        ]
-      }
-    },
-    "githubUrl": "",
-    "pdfReportUrl": ""
   }
 ];
 
